@@ -1,35 +1,15 @@
 import {createRoot} from "react-dom/client";
-import {App} from "./components/App/App";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {LazyAbout} from "@/pages/about/About.lazy";
-import {Shop} from "@/pages/Shop";
-import {Suspense} from "react";
+import {App} from "./pages/App";
+import {StrictMode} from "react";
+import { Provider } from "react-redux";
+import { setupStore } from "./store/store";
 
-const root = document.getElementById('root')
+const store = setupStore()
 
-if(!root) {
-    throw new Error('root not found')
-}
-
-const container = createRoot(root)
-
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <App />,
-        children: [
-            {
-                path: '/about',
-                element:  <Suspense fallback={'Loading...'}><LazyAbout /></Suspense>
-            },
-            {
-                path: '/shop',
-                element: <Suspense fallback={'Loading...'}><Shop /></Suspense>
-            },
-        ]
-    },
-]);
-
-container.render(
-    <RouterProvider router={router} />
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </StrictMode>,
 )

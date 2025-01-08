@@ -13,25 +13,25 @@ export function buildLoaders(options: BuildOptions): ModuleOptions['rules'] {
     }
 
     const svgrLoader = {
-        test: /\.svg$/i,
-        use: [
-            {
-                loader: '@svgr/webpack',
-                options: {
-                    icon: true,
-                    svgoConfig: {
-                        plugins: [
-                            {
-                                name: 'convertColors',
-                                params: {
-                                    currentColor: true,
-                                }
-                            }
-                        ]
-                    }
+      test: /\.svg$/i,
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            icon: true,
+            svgoConfig: {
+              plugins: [
+                {
+                  name: 'convertColors',
+                  params: {
+                    currentColor: true,
+                  }
                 }
+              ]
             }
-        ],
+          }
+        }
+      ],
     }
 
     const cssLoaderWithModules = {
@@ -44,22 +44,19 @@ export function buildLoaders(options: BuildOptions): ModuleOptions['rules'] {
     }
 
     const scssLoader = {
-        test: /\.s[ac]ss$/i,
+        test: /\.(sass|less|css)$/i,
         use: [
-            // Creates `style` nodes from JS strings
             isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            // Translates CSS into CommonJS
-            cssLoaderWithModules,
-            // Compiles Sass to CSS
+            // cssLoaderWithModules,
+            "css-loader",
             "sass-loader",
+            "postcss-loader"
         ],
     }
 
 
 
     const tsLoader = {
-        // ts-loader умеет работать с JSX
-        // Если б мы не использовали тайпскрипт: нужен был бы babel-loader
         exclude: /node_modules/,
         test: /\.tsx?$/,
         use: [
