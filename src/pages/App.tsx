@@ -13,11 +13,11 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 export const App = () => {
   useSetTasks()
   return (
-    <div className="bg-main-background min-w-full min-h-screen bg-cover bg-center">
-      <div className="py-14 px-10">
+    <div className="min-h-screen h-full flex justify-center">
+      <div className="py-14 px-10 max-w-[1920px]">
         <Header/>
 
-        <div className="grid grid-flow-col gap-10">
+        <div className="grid grid-flow-col grid-cols-4 gap-10">
           {Boards.map((board, index) => (
             <Board data={board} key={index}/>
           ))}

@@ -23,6 +23,13 @@ export const taskSLice = createSlice({
       }
     },
 
+    deleteTask: (state, action: PayloadAction<number>) => {
+      state.tasks = state.tasks.filter(task => task.id != action.payload)
+    },
+    deleteAllDone: (state) => {
+      state.tasks = state.tasks.filter(task => task.type != "done")
+    },
+
     addTask: (state, action: PayloadAction<TaskI>) => {
       state.tasks.push(action.payload)
     },

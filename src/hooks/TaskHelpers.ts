@@ -3,19 +3,22 @@ import { useAppDispatch, useAppSelector } from "./redux";
 import { tasksTemplate } from "@/consts/tasks";
 import { TaskI } from "@/types/task";
 import { useCallback } from "react";
+import { BoardTypes } from "@/types/board";
+
+const setStorage = (data: TaskI[]) => localStorage.setItem("taskList", JSON.stringify(data))
+const getStorage = (): TaskI[] => JSON.parse(localStorage.getItem("taskList")) || [];
 
 const useSetTasks = () => {
   const dispatch = useAppDispatch()
   const {setTasks} = taskSLice.actions
-  const taskList = localStorage.getItem("taskList");
+  const taskList = getStorage();
 
-
-  if (!taskList) {
-    localStorage.setItem("taskList", JSON.stringify(tasksTemplate))
+  if (!taskList.length) {
+    setStorage(tasksTemplate)
     dispatch(setTasks(tasksTemplate))
   }
   else {
-    dispatch(setTasks(JSON.parse(taskList)))
+    dispatch(setTasks(getStorage()))
   }
 }
 
@@ -23,13 +26,13 @@ const useAddTask = () => {
   const dispatch = useAppDispatch()
   const {addTask} = taskSLice.actions
 
-  const addTaskF = useCallback((data: TaskI) => {
-    const existingTasks = JSON.parse(localStorage.getItem("taskList")) || [];
+  const addTaskF = (data: TaskI) => {
+    const existingTasks = getStorage()
     const updatedTasks = [...existingTasks, data];
     
-    localStorage.setItem('taskList', JSON.stringify(updatedTasks));
+    setStorage(updatedTasks)
     dispatch(addTask(data))
-  }, [dispatch]);
+  }
   
   return addTaskF;
 }
@@ -38,20 +41,70 @@ const useEditTask = () => {
   const dispatch = useAppDispatch()
   const {editTask} = taskSLice.actions
 
-  const editTaskF = useCallback((data: TaskI) => {
-    let existingTasks = JSON.parse(localStorage.getItem("taskList")) || [];
-    existingTasks.filter((task: TaskI) => task.id != data.id)
+  const editTaskF = (data: TaskI) => {
+    let existingTasks = getStorage()
+    existingTasks = existingTasks.filter((task: TaskI) => task.id != data.id)
     const updatedTasks = [...existingTasks, data];
     
-    localStorage.setItem('taskList', JSON.stringify(updatedTasks));
+    setStorage(updatedTasks)
     dispatch(editTask(data))
-  }, [dispatch]);
+  }
   
   return editTaskF;
+}
+
+const useDeleteTask = () => {
+  const dispatch = useAppDispatch()
+  const {deleteTask} = taskSLice.actions
+
+  const deleteF = (id: number) => {
+    let existingTasks = getStorage()
+    const updatedTasks = existingTasks.filter((task: TaskI) => task.id != id)
+
+    setStorage(updatedTasks)
+    dispatch(deleteTask(id))
+  }
+
+  return deleteF
+}
+
+const useSetTypeTask = () => {
+  const dispatch = useAppDispatch()
+  const {editTask} = taskSLice.actions
+
+  const setTypeF = (data: TaskI, type: BoardTypes) => {
+    const newData = {...data, type}
+    let existingTasks = getStorage()
+    existingTasks = existingTasks.filter((task: TaskI) => task.id != data.id)
+    const updatedTasks = [...existingTasks, newData];
+
+    setStorage(updatedTasks)
+    dispatch(editTask(newData))
+  }
+
+  return setTypeF
+}
+
+const useDeleteAllDone = () => {
+  const dispatch = useAppDispatch()
+  const {deleteAllDone} = taskSLice.actions
+
+  const deleteAllDoneF = () => {
+    let newData = getStorage()
+    newData = newData.filter(task => task.type != "done")
+
+    setStorage(newData)
+    dispatch(deleteAllDone())
+  }
+
+  return deleteAllDoneF
 }
 
 export {
   useSetTasks,
   useAddTask,
-  useEditTask
+  useEditTask,
+  useDeleteTask,
+  useSetTypeTask,
+  useDeleteAllDone
 }

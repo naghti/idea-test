@@ -9,21 +9,29 @@ export const Boards:  BoardI[] = [
   {
     name: "To Do",
     type: "todo",
-    Image: ImageSmile
+    image: ImageSmile,
+    addButton: true,
+    basketButton: false
   },
   {
     name: "In Progress",
     type: "in_progress",
-    Image: ImageHappy
+    image: ImageHappy,
+    addButton: false,
+    basketButton: false
   },
   {
     name: "Review",
     type: "review",
-    Image: ImageUsideDown
+    image: ImageUsideDown,
+    addButton: false,
+    basketButton: false
   },
   {
     name: "Done",
     type: "done",
-    Image: ImageGhost
+    image: ImageGhost,
+    addButton: false,
+    basketButton: true
   },
 ]

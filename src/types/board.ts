@@ -4,5 +4,8 @@ export type BoardTypes = "todo" | "in_progress" | "review" | "done"
 export type BoardI = {
   name: BoardNames;
   type: BoardTypes;
-  Image: React.VFC<React.SVGProps<SVGSVGElement>>;
+  image: React.VFC<React.SVGProps<SVGSVGElement>>;
+  basketButton: boolean;
+  addButton: boolean;
 }
+
